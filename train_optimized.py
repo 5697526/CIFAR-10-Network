@@ -1,4 +1,4 @@
-# train_optimizers.py
+# train_optimized.py
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -9,11 +9,17 @@ from utils.dataloader import get_dataloaders
 from utils.loss_utils import get_loss_function, CombinedLoss, L1Regularization, L2Regularization
 from models.activations import get_activation
 import os
+import logging
+
+# 配置日志记录
+logging.basicConfig(filename='training.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def main():
     # 设备配置
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    logging.info(f"Using device: {device}")
     print(f"Using device: {device}")
 
     # 创建结果保存目录
@@ -22,43 +28,43 @@ def main():
     # 优化策略配置
     config = {
         # 网络结构配置
-        "filter_config": "medium",
+        "filter_config": "wide",
         "fc_units": "default",
 
         # 激活函数配置
-        "activation": "relu",
+        "activation": "mish",
 
         # 损失函数配置
-        "loss_type": "ce",
+        "loss_type": "ls",
         "focal_alpha": 1,
         "focal_gamma": 2,
-        "ls_smoothing": 0.1,
+        "ls_smoothing": 0,
 
         # 正则化配置
         "use_l1": False,
         "lambda_l1": 1e-4,
         "use_l2": True,
-        "lambda_l2": 5e-4,
+        "lambda_l2": 0.0001,
 
         # 训练超参数
         "num_epochs": 30,
         "batch_size": 128,
 
         # 优化器配置
-        "optimizer": "sgd",            # 优化器类型: "sgd", "adam", "rmsprop", "adagrad"
-        "learning_rate": 0.01,
-        "momentum": 0.9,               # SGD动量
-        "nesterov": True,              # SGD是否使用Nesterov动量
-        "weight_decay": 5e-4,          # 权重衰减
-        "beta1": 0.9,                  # Adam beta1参数
-        "beta2": 0.999,                # Adam beta2参数
-        "eps": 1e-8,                   # Adam epsilon参数
-        "alpha": 0.99,                 # RMSprop alpha参数
+        "optimizer": "adam",
+        "learning_rate": 0.001,
+        "momentum": 0,
+        "weight_decay": 0.0001,
+        "beta1": 0.9,
+        "beta2": 0.999,
+        "eps": 1e-8,
     }
 
-    # 打印当前配置
+    # 打印当前配置并记录到日志
+    logging.info("训练配置:")
     print("训练配置:")
     for key, value in config.items():
+        logging.info(f"  {key}: {value}")
         print(f"  {key}: {value}")
 
     # 获取数据加载器
@@ -89,36 +95,12 @@ def main():
     criterion = CombinedLoss(base_loss, l1_reg, l2_reg)
 
     # 初始化优化器
-    if config["optimizer"] == "sgd":
-        optimizer = optim.SGD(
-            model.parameters(),
-            lr=config["learning_rate"],
-            momentum=config["momentum"],
-            nesterov=config["nesterov"],
-            weight_decay=config["weight_decay"] if config["use_l2"] else 0
-        )
-    elif config["optimizer"] == "adam":
+    if config["optimizer"] == "adam":
         optimizer = optim.Adam(
             model.parameters(),
             lr=config["learning_rate"],
             betas=(config["beta1"], config["beta2"]),
             eps=config["eps"],
-            weight_decay=config["weight_decay"] if config["use_l2"] else 0
-        )
-    elif config["optimizer"] == "rmsprop":
-        optimizer = optim.RMSprop(
-            model.parameters(),
-            lr=config["learning_rate"],
-            alpha=config["alpha"],
-            eps=config["eps"],
-            momentum=config["momentum"],
-            weight_decay=config["weight_decay"] if config["use_l2"] else 0
-        )
-    elif config["optimizer"] == "adagrad":
-        optimizer = optim.Adagrad(
-            model.parameters(),
-            lr=config["learning_rate"],
-            lr_decay=0,
             weight_decay=config["weight_decay"] if config["use_l2"] else 0
         )
     else:
@@ -147,9 +129,11 @@ def main():
             }, './results/best_model.pth')
 
         scheduler.step()
-        print(
-            f'Epoch {epoch+1}/{config["num_epochs"]}, Train Loss: {train_loss:.4f}, Test Acc: {test_acc:.2f}%')
+        log_message = f'Epoch {epoch+1}/{config["num_epochs"]}, Train Loss: {train_loss:.4f}, Test Acc: {test_acc:.2f}%'
+        logging.info(log_message)
+        print(log_message)
 
+    logging.info(f'Best test accuracy: {best_acc:.2f}%')
     print(f'Best test accuracy: {best_acc:.2f}%')
 
 

@@ -6,6 +6,11 @@ from utils.hyperparameter_search import RandomSearch, BayesianOptimization
 import argparse
 import numpy as np
 import random
+import logging
+
+# 配置日志记录
+logging.basicConfig(filename='hyperparameter_search.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def main():
@@ -46,8 +51,16 @@ def main():
             save_dir=args.save_dir
         )
 
+    # 记录搜索开始信息
+    logging.info(f"开始超参数搜索，方法: {args.method}, 试验次数: {args.trials}")
+    print(f"开始超参数搜索，方法: {args.method}, 试验次数: {args.trials}")
+
     # 运行搜索
     search.run()
+
+    # 记录搜索结束信息
+    logging.info("超参数搜索结束")
+    print("超参数搜索结束")
 
 
 if __name__ == '__main__':

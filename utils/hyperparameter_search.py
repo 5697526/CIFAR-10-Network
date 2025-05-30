@@ -32,23 +32,23 @@ class HyperparameterSearch:
             # 网络结构
             'filter_config': list(FILTER_CONFIGS.keys()),
             'fc_units': list(FC_UNITS_CONFIGS.keys()),
-            'activation': ['relu', 'swish', 'mish', 'selu', 'gelu'],
+            'activation': ['mish'],
 
             # 训练参数
-            'batch_size': [32, 64, 128, 256],
-            'num_epochs': [15, 20, 30],
+            'batch_size': [64, 128, 192],
+            'num_epochs': [25, 30, 35],
 
             # 优化器参数
-            'optimizer': ['sgd', 'adam', 'rmsprop'],
-            'learning_rate': [0.001, 0.005, 0.01, 0.05, 0.1],
+            'optimizer': ['adam'],
+            'learning_rate': [0.001, 0.0015, 0.005],
             'momentum': [0.85, 0.9, 0.95],
-            'weight_decay': [0, 1e-5, 5e-5, 1e-4, 5e-4, 1e-3],
+            'weight_decay': [0.0001, 0.00015, 0.00005],
 
             # 损失函数参数
-            'loss_type': ['ce', 'focal', 'ls'],
+            'loss_type': ['ls'],
             'focal_alpha': [0.5, 1, 2, 5],
             'focal_gamma': [0, 1, 2, 3],
-            'ls_smoothing': [0, 0.05, 0.1, 0.2]
+            'ls_smoothing': [0, 0.05, 0.01]
         }
 
     def get_random_config(self):
