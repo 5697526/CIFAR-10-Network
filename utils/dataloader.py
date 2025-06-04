@@ -22,3 +22,7 @@ def get_dataloaders(batch_size=32):
         testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
     return trainloader, testloader
+
+
+if __name__ == '__main__':
+    trainloader, testloader = get_dataloaders(batch_size=32)

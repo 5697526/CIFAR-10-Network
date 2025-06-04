@@ -1,5 +1,6 @@
 # CIFAR-10-Network
 
+
 ### 一、项目概述：
 
 本项目旨在 CIFAR - 10 数据集上训练神经网络模型，以实现图像分类任务的性能优化。通过构建不同的神经网络模型，运用多种优化策略和超参数搜索方法，以提高模型在 CIFAR - 10 数据集上的分类准确率。同时，项目还包含了对网络的可视化分析，帮助理解模型的学习过程和决策机制。
@@ -70,7 +71,7 @@ python utils/dataloader.py
 可以使用不同的训练脚本来训练模型，如`train.py`、`train_optimized.py`、`train_component_optimizers.py`和`train_custom_optimizer.py`。这些脚本中包含了不同的优化策略和超参数配置。
 
 ```
-python train_custom_optimizer.py
+python train_optimized.py
 ```
 
 
@@ -99,3 +100,4 @@ python visualize_network.py
 ```
 
 ### 五、模型权重下载
+我的训练好的最佳模型保存在我的网盘：

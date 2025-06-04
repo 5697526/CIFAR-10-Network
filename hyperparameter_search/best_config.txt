@@ -1,14 +1,14 @@
-filter_config: large
+filter_config: wide
 fc_units: default
 activation: mish
-batch_size: 192
-num_epochs: 35
+batch_size: 128
+num_epochs: 30
 optimizer: adam
 learning_rate: 0.001
 momentum: 0
-weight_decay: 0.00015
+weight_decay: 0.0001
 loss_type: ls
 focal_alpha: 1
 focal_gamma: 2
-ls_smoothing: 0.05
-Best accuracy: 86.45%
+ls_smoothing: 0
+Best accuracy: 84.98%

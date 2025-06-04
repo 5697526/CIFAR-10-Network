@@ -12,6 +12,7 @@ from torch.optim import lr_scheduler
 import pandas as pd
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
+import logging
 
 
 class HyperparameterSearch:
@@ -30,26 +31,28 @@ class HyperparameterSearch:
         # 定义超参数搜索空间
         self.search_space = {
             # 网络结构
-            'filter_config': list(FILTER_CONFIGS.keys()),
-            'fc_units': list(FC_UNITS_CONFIGS.keys()),
-            'activation': ['mish'],
+            'filter_config': ['large', 'deep', 'wide'],
+            'fc_units': ['default', 'complex'],
+            'activation': ['relu', 'mish', 'selu'],
 
             # 训练参数
-            'batch_size': [64, 128, 192],
-            'num_epochs': [25, 30, 35],
+            'batch_size': [32, 64, 128],
+            'num_epochs': [30],
 
             # 优化器参数
-            'optimizer': ['adam'],
-            'learning_rate': [0.001, 0.0015, 0.005],
-            'momentum': [0.85, 0.9, 0.95],
-            'weight_decay': [0.0001, 0.00015, 0.00005],
+            'optimizer': ['sgd', 'adam'],
+            'learning_rate': [0.001],
+            'momentum': [0.95],
+            'weight_decay': [1e-5, 5e-5, 1e-4, 5e-4],
 
             # 损失函数参数
-            'loss_type': ['ls'],
-            'focal_alpha': [0.5, 1, 2, 5],
-            'focal_gamma': [0, 1, 2, 3],
-            'ls_smoothing': [0, 0.05, 0.01]
+            'loss_type': ['ce', 'focal', 'ls'],
+            'focal_alpha': [1],
+            'focal_gamma': [2],
+            'ls_smoothing': [0, 0.05, 0.1]
         }
+        logging.basicConfig(filename=os.path.join(save_dir, 'search_log.log'), level=logging.INFO,
+                            format='%(asctime)s - %(levelname)s - %(message)s')
 
     def get_random_config(self):
         """生成随机超参数配置"""
@@ -81,17 +84,17 @@ class HyperparameterSearch:
 
     def evaluate_config(self, config):
         """评估给定的超参数配置"""
-        # 设备配置
+    # 设备配置
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-        # 创建模型
+    # 创建模型
         model = self.model_builder(
             num_classes=10,
             filter_config=FILTER_CONFIGS[config['filter_config']],
             fc_units=FC_UNITS_CONFIGS[config['fc_units']]
         ).to(device)
 
-        # 初始化损失函数
+    # 初始化损失函数
         base_loss = get_loss_function(
             loss_type=config['loss_type'],
             alpha=config['focal_alpha'],
@@ -99,16 +102,16 @@ class HyperparameterSearch:
             smoothing=config['ls_smoothing']
         )
 
-        # 初始化正则化
+    # 初始化正则化
         l1_reg = L1Regularization(model, 0) if config.get(
             'use_l1', False) else None
         l2_reg = L2Regularization(model, config['weight_decay']) if config.get(
             'use_l2', True) else None
 
-        # 组合损失函数
+    # 组合损失函数
         criterion = CombinedLoss(base_loss, l1_reg, l2_reg)
 
-        # 初始化优化器
+    # 初始化优化器
         if config['optimizer'] == 'sgd':
             optimizer = torch.optim.SGD(
                 model.parameters(),
@@ -129,11 +132,14 @@ class HyperparameterSearch:
                 weight_decay=config['weight_decay']
             )
 
-        # 学习率调度
+    # 学习率调度
         scheduler = lr_scheduler.CosineAnnealingLR(
             optimizer, T_max=config['num_epochs'])
 
-        # 训练模型
+    # 记录每个 epoch 的训练损失和测试准确率
+        epoch_results = []
+
+    # 训练模型
         best_acc = 0.0
         for epoch in range(config['num_epochs']):
             train_loss = train(model, device, self.trainloader,
@@ -145,11 +151,23 @@ class HyperparameterSearch:
 
             scheduler.step()
 
-        # 保存结果
+        # 记录当前 epoch 的结果到日志
+            log_message = f"Config: {config}, Epoch {epoch+1}/{config['num_epochs']}, Train Loss: {train_loss:.4f}, Test Acc: {test_acc:.2f}%"
+            logging.info(log_message)
+
+        # 记录当前 epoch 的结果
+            epoch_results.append({
+                'epoch': epoch + 1,
+                'train_loss': train_loss,
+                'test_accuracy': test_acc
+            })
+
+    # 保存结果
         result = {
             'config': config,
             'best_accuracy': best_acc,
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'epoch_results': epoch_results
         }
 
         self.results.append(result)
@@ -159,17 +177,21 @@ class HyperparameterSearch:
 
     def save_results(self):
         """保存搜索结果"""
-        # 转换为DataFrame
-        df = pd.DataFrame([
-            {**r['config'], 'best_accuracy': r['best_accuracy'],
-                'timestamp': r['timestamp']}
-            for r in self.results
-        ])
+    # 转换为 DataFrame
+        all_results = []
+        for r in self.results:
+            config = r['config']
+            for epoch_result in r['epoch_results']:
+                result = {**config, **epoch_result,
+                          'best_accuracy': r['best_accuracy'], 'timestamp': r['timestamp']}
+                all_results.append(result)
 
-        # 保存为CSV
+        df = pd.DataFrame(all_results)
+
+    # 保存为 CSV
         df.to_csv(os.path.join(self.save_dir, 'search_results.csv'), index=False)
 
-        # 保存最佳模型
+    # 保存最佳模型
         if len(self.results) > 0:
             best_result = max(self.results, key=lambda x: x['best_accuracy'])
             with open(os.path.join(self.save_dir, 'best_config.txt'), 'w') as f:

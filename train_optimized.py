@@ -28,7 +28,7 @@ def main():
     # 优化策略配置
     config = {
         # 网络结构配置
-        "filter_config": "wide",
+        "filter_config": "large",
         "fc_units": "default",
 
         # 激活函数配置
@@ -38,23 +38,23 @@ def main():
         "loss_type": "ls",
         "focal_alpha": 1,
         "focal_gamma": 2,
-        "ls_smoothing": 0,
+        "ls_smoothing": 0.05,
 
-        # 正则化配置
+        # 正则化配置 - 选择一种方式
         "use_l1": False,
         "lambda_l1": 1e-4,
         "use_l2": True,
-        "lambda_l2": 0.0001,
+        "lambda_l2": 5e-4,
 
         # 训练超参数
-        "num_epochs": 30,
+        "num_epochs": 35,
         "batch_size": 128,
 
         # 优化器配置
         "optimizer": "adam",
         "learning_rate": 0.001,
         "momentum": 0,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.00015,
         "beta1": 0.9,
         "beta2": 0.999,
         "eps": 1e-8,
@@ -77,7 +77,7 @@ def main():
         fc_units=FC_UNITS_CONFIGS[config["fc_units"]]
     ).to(device)
 
-    # 初始化损失函数
+    # 初始化损失函数 - 传递类别数
     base_loss = get_loss_function(
         loss_type=config["loss_type"],
         alpha=config["focal_alpha"],
@@ -85,23 +85,21 @@ def main():
         smoothing=config["ls_smoothing"]
     )
 
-    # 初始化正则化
+    # 初始化正则化 - 仅保留L1正则化（L2通过优化器实现）
     l1_reg = L1Regularization(
         model, config["lambda_l1"]) if config["use_l1"] else None
-    l2_reg = L2Regularization(
-        model, config["lambda_l2"]) if config["use_l2"] else None
 
-    # 组合损失函数
-    criterion = CombinedLoss(base_loss, l1_reg, l2_reg)
+    # 组合损失函数 - 不再传递L2正则化
+    criterion = CombinedLoss(base_loss, l1_reg, None)
 
-    # 初始化优化器
+    # 初始化优化器 - 仅通过优化器使用L2正则化
     if config["optimizer"] == "adam":
         optimizer = optim.Adam(
             model.parameters(),
             lr=config["learning_rate"],
             betas=(config["beta1"], config["beta2"]),
             eps=config["eps"],
-            weight_decay=config["weight_decay"] if config["use_l2"] else 0
+            weight_decay=config["weight_decay"]  # 确保L2正则化只应用一次
         )
     else:
         raise ValueError(f"不支持的优化器类型: {config['optimizer']}")
