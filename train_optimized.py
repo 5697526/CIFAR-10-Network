@@ -27,30 +27,24 @@ def main():
 
     # 优化策略配置
     config = {
-        # 网络结构配置
         "filter_config": "large",
         "fc_units": "default",
 
-        # 激活函数配置
         "activation": "mish",
 
-        # 损失函数配置
         "loss_type": "ls",
         "focal_alpha": 1,
         "focal_gamma": 2,
         "ls_smoothing": 0.05,
 
-        # 正则化配置 - 选择一种方式
         "use_l1": False,
         "lambda_l1": 1e-4,
         "use_l2": True,
         "lambda_l2": 5e-4,
 
-        # 训练超参数
         "num_epochs": 35,
         "batch_size": 128,
 
-        # 优化器配置
         "optimizer": "adam",
         "learning_rate": 0.001,
         "momentum": 0,

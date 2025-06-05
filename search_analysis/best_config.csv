@@ -1,0 +1,16 @@
+,3
+filter_config,wide
+fc_units,default
+activation,mish
+batch_size,128
+num_epochs,30
+optimizer,adam
+learning_rate,0.001
+momentum,0.0
+weight_decay,0.0001
+loss_type,ls
+focal_alpha,1
+focal_gamma,2
+ls_smoothing,0.0
+best_accuracy,84.98
+timestamp,2025-05-31 14:41:47

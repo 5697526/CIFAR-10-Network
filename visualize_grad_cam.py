@@ -9,7 +9,7 @@ import os
 
 def main():
     # 设置中文字体
-    plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
+    plt.rcParams["font.family"] = "Microsoft YaHei"
 
     # 设备配置
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -21,7 +21,7 @@ def main():
     # 加载模型
     model = ConfigurableCNN(
         num_classes=10,
-        filter_config=FILTER_CONFIGS["medium"]
+        filter_config=FILTER_CONFIGS["large"]
     ).to(device)
 
     # 加载预训练权重
@@ -45,14 +45,14 @@ def main():
 
     # 可视化前10张图像的Grad-CAM结果
     for i in range(10):
-        images, labels = dataiter.next()
+        images, labels = next(dataiter)
         image = images[0].to(device)
 
-        # 可视化Grad-CAM (使用最后一个卷积层)
+        # 可视化Grad-CAM (使用第一个卷积层)
         fig = visualize_grad_cam(
             model,
             image,
-            target_layer='conv3',  # 可修改为其他卷积层
+            target_layer='convs.0',  # 可修改为其他卷积层
             class_names=classes,
             figsize=(12, 4)
         )

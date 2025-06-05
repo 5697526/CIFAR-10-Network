@@ -1,58 +1,5 @@
-2025-06-04 16:09:45,047 - INFO - Using device: cpu
-2025-06-04 16:09:45,047 - INFO - ÑµÁ·ÅäÖÃ:
-2025-06-04 16:09:45,048 - INFO -   filter_config: wide
-2025-06-04 16:09:45,048 - INFO -   fc_units: default
-2025-06-04 16:09:45,048 - INFO -   activation: selu
-2025-06-04 16:09:45,048 - INFO -   loss_type: ls
-2025-06-04 16:09:45,048 - INFO -   focal_alpha: 1
-2025-06-04 16:09:45,048 - INFO -   focal_gamma: 2
-2025-06-04 16:09:45,048 - INFO -   ls_smoothing: 0.1
-2025-06-04 16:09:45,048 - INFO -   use_l1: False
-2025-06-04 16:09:45,048 - INFO -   lambda_l1: 0.0001
-2025-06-04 16:09:45,048 - INFO -   use_l2: True
-2025-06-04 16:09:45,048 - INFO -   lambda_l2: 0.0005
-2025-06-04 16:09:45,048 - INFO -   num_epochs: 30
-2025-06-04 16:09:45,048 - INFO -   batch_size: 128
-2025-06-04 16:09:45,048 - INFO -   optimizer: adam
-2025-06-04 16:09:45,048 - INFO -   learning_rate: 0.001
-2025-06-04 16:09:45,048 - INFO -   momentum: 0
-2025-06-04 16:09:45,048 - INFO -   weight_decay: 0.00015
-2025-06-04 16:09:45,048 - INFO -   beta1: 0.9
-2025-06-04 16:09:45,048 - INFO -   beta2: 0.999
-2025-06-04 16:09:45,048 - INFO -   eps: 1e-08
-2025-06-04 16:13:25,888 - INFO - Epoch 1/30, Train Loss: 1.7998, Test Acc: 53.31%
-2025-06-04 16:17:38,482 - INFO - Epoch 2/30, Train Loss: 1.4453, Test Acc: 64.71%
-2025-06-04 16:21:48,248 - INFO - Epoch 3/30, Train Loss: 1.3345, Test Acc: 70.17%
-2025-06-04 16:25:57,070 - INFO - Epoch 4/30, Train Loss: 1.2756, Test Acc: 71.69%
-2025-06-04 16:27:55,183 - INFO - Epoch 5/30, Train Loss: 1.2326, Test Acc: 75.16%
-2025-06-04 16:30:15,342 - INFO - Epoch 6/30, Train Loss: 1.2025, Test Acc: 71.37%
-2025-06-04 16:32:35,072 - INFO - Epoch 7/30, Train Loss: 1.1702, Test Acc: 74.54%
-2025-06-04 16:34:49,253 - INFO - Epoch 8/30, Train Loss: 1.1449, Test Acc: 76.41%
-2025-06-04 16:37:07,837 - INFO - Epoch 9/30, Train Loss: 1.1263, Test Acc: 75.83%
-2025-06-04 16:39:28,548 - INFO - Epoch 10/30, Train Loss: 1.1044, Test Acc: 78.11%
-2025-06-04 16:41:48,856 - INFO - Epoch 11/30, Train Loss: 1.0850, Test Acc: 80.01%
-2025-06-04 16:44:05,314 - INFO - Epoch 12/30, Train Loss: 1.0665, Test Acc: 79.45%
-2025-06-04 16:46:24,176 - INFO - Epoch 13/30, Train Loss: 1.0523, Test Acc: 80.81%
-2025-06-04 16:48:54,182 - INFO - Epoch 14/30, Train Loss: 1.0348, Test Acc: 80.06%
-2025-06-04 16:51:40,782 - INFO - Epoch 15/30, Train Loss: 1.0216, Test Acc: 81.62%
-2025-06-04 16:54:23,195 - INFO - Epoch 16/30, Train Loss: 1.0047, Test Acc: 82.04%
-2025-06-04 16:57:00,731 - INFO - Epoch 17/30, Train Loss: 0.9958, Test Acc: 81.92%
-2025-06-04 16:59:44,869 - INFO - Epoch 18/30, Train Loss: 0.9811, Test Acc: 80.49%
-2025-06-04 17:02:48,501 - INFO - Epoch 19/30, Train Loss: 0.9693, Test Acc: 81.70%
-2025-06-04 17:05:32,312 - INFO - Epoch 20/30, Train Loss: 0.9581, Test Acc: 82.23%
-2025-06-04 17:08:22,032 - INFO - Epoch 21/30, Train Loss: 0.9503, Test Acc: 82.47%
-2025-06-04 17:11:22,248 - INFO - Epoch 22/30, Train Loss: 0.9374, Test Acc: 82.55%
-2025-06-04 17:14:11,283 - INFO - Epoch 23/30, Train Loss: 0.9322, Test Acc: 83.15%
-2025-06-04 17:17:07,433 - INFO - Epoch 24/30, Train Loss: 0.9241, Test Acc: 82.80%
-2025-06-04 17:20:02,336 - INFO - Epoch 25/30, Train Loss: 0.9151, Test Acc: 82.89%
-2025-06-04 17:22:40,433 - INFO - Epoch 26/30, Train Loss: 0.9108, Test Acc: 82.84%
-2025-06-04 17:25:17,908 - INFO - Epoch 27/30, Train Loss: 0.9087, Test Acc: 82.80%
-2025-06-04 17:27:48,685 - INFO - Epoch 28/30, Train Loss: 0.9059, Test Acc: 83.10%
-2025-06-04 17:30:35,586 - INFO - Epoch 29/30, Train Loss: 0.9025, Test Acc: 83.16%
-2025-06-04 17:33:27,870 - INFO - Epoch 30/30, Train Loss: 0.9005, Test Acc: 83.45%
-2025-06-04 17:33:27,870 - INFO - Best test accuracy: 83.45%
 2025-06-04 17:36:55,374 - INFO - Using device: cpu
-2025-06-04 17:36:55,374 - INFO - ÑµÁ·ÅäÖÃ:
+2025-06-04 17:36:55,374 - INFO - Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:
 2025-06-04 17:36:55,379 - INFO -   filter_config: large
 2025-06-04 17:36:55,379 - INFO -   fc_units: default
 2025-06-04 17:36:55,379 - INFO -   activation: mish
