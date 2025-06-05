@@ -21,15 +21,19 @@
 ```
 CIFAR-10-Network/
 ├── analyze_search_results.py         # 分析超参数搜索结果
+├── data\cifar-10-batches-py/         # 数据集
+├── grad_cam_visualizations/          # Grad - CAM可视化结果
 ├── hyperparameter_search_main.py     # 超参数搜索主脚本
 ├── hyperparameter_search/
 │   └── best_config.txt               # 超参数搜索得到的最佳配置
+│   └── search_results.csv            # 超参数搜索的详细结果
 ├── models/
 │   ├── model.py                      # 基本卷积神经网络和残差网络定义
 │   ├── model_optimized.py            # 可配置的卷积神经网络定义
 │   └── activations.py                # 自定义激活函数定义
 ├── results/
-│   └── best_config.txt               # 训练得到的最佳配置
+│   └── best_model.pth                # 训练得到的最佳模型权重
+├── search_analysis/                  # 超参数搜索结果分析
 ├── train.py                          # 使用基本模型进行训练
 ├── train_optimized.py                # 使用优化模型进行训练
 ├── train_component_optimizers.py     # 为不同层使用不同优化器进行训练
@@ -41,8 +45,13 @@ CIFAR-10-Network/
 │   ├── hyperparameter_search.py      # 超参数搜索工具函数
 │   ├── grad_cam.py                   # Grad - CAM可视化工具函数
 │   └── visualization.py              # 网络可视化工具函数
+├── visualizations/                   # 网络可视化结果
 ├── visualize_network.py              # 网络可视化脚本
-└── visualize_grad_cam.py             # Grad - CAM可视化脚本
+├── visualize_grad_cam.py             # Grad - CAM可视化脚本
+├── grad_cam_visualizations/
+│   └── best_config.txt               # 超参数搜索得到的最佳配置
+│   └── search_results.csv            # 超参数搜索的详细结果
+├── 
 ```
 
 ### 四、实验步骤
