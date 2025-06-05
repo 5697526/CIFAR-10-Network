@@ -100,4 +100,4 @@ python visualize_network.py
 ```
 
 ### 五、模型权重下载
-我的训练好的最佳模型保存在我的网盘：
+模型和可视化结果保存在我的网盘: https://pan.baidu.com/s/1H97zHjBM6LBvDy_4BsKO-A?pwd=9395 提取码: 9395
